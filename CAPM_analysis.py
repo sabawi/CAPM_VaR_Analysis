@@ -41,8 +41,8 @@ def var_covariance3(stock_prices, time_horizon, confidence_level):
     # Calculate the VaR for the holding period
     var = daily_var * np.sqrt(time_horizon)
     print("Using Variance-Covariance Method:")
-    print(f'\tValue at Risk (VaR) as % of Price using Variance/CoVariance Method: {round(var_pct,2)}%')
-    print(f'\tValue at Risk (VaR) using Variance/CoVariance Method: ${round(var,2)}')
+    print(f'\tDaily Value at Risk (VaR) as % of Price using Variance/CoVariance Method: {round(var_pct,2)}%')
+    print(f'\tDaily Value at Risk (VaR) using Variance/CoVariance Method: ${round(var,2)}')
 
     return var_pct, var
 
@@ -71,8 +71,8 @@ def var_covariance(last_stock_price, time_horizon, std_dev_return, confidence_le
     # Calculate the VaR for the holding period
     var = daily_var * np.sqrt(time_horizon)
     print("Using Variance-Covariance Method:")
-    print(f'\tValue at Risk (VaR) as % of Price using Variance-CoVariance Method: {round(var_pct,2)}%')
-    print(f'\tValue at Risk (VaR) using Variance-CoVariance Method: ${round(var,2)}')
+    print(f'\tDaily Value at Risk (VaR) as % of Price using Variance-CoVariance Method: {round(var_pct,2)}%')
+    print(f'\tDaily Value at Risk (VaR) using Variance-CoVariance Method: ${round(var,2)}')
     return var_pct, var
 
 def var_monte_carlo(data, time_horizon, num_simulations, mean_return, std_dev_return, confidence_level) :
@@ -95,8 +95,8 @@ def var_monte_carlo(data, time_horizon, num_simulations, mean_return, std_dev_re
     var_dollar_selected = var_dollar[index]  
       
     print("Using Monte-Carlo Simulation Method:")
-    print(f'\tValue at Risk (VaR) as % of Price using Monte Carlo simulation: {round(100 * var_percent,4)}%')    
-    print(f'\tValue at Risk (VaR) using Monte Carlo simulation: ${round(var_dollar_selected,2)} dollars')
+    print(f'\tDaily Value at Risk (VaR) as % of Price using Monte Carlo simulation: {round(100 * var_percent,4)}%')    
+    print(f'\tDaily Value at Risk (VaR) using Monte Carlo simulation: ${round(var_dollar_selected,2)} dollars')
     
     return var_percent, var_dollar_selected
 
@@ -206,10 +206,10 @@ print("\n**Bond future value assumes no re-investment of coupon payments\n***Sto
 
 # VaR Analysis
 
-print(f"\nValue at Risk (VaR) Analysis for {stock_symbol} Stock:")
+print(f"\nDaily Value at Risk (VaR) Analysis for {stock_symbol} Stock:")
 # Set the confidence level for VaR calculation (e.g. 95% confidence level)
 confidence_level = 1.0 - 0.99
-print(f"Using Confidence Level: {(1.0-confidence_level)*100}% for VaR Calculations")
+print(f"Using Confidence Level: {(1.0-confidence_level)*100}% for Daily VaR Calculations")
 
 # Calculate the log returns of the stock
 log_returns = np.log(1 + stock_data['returns'])
