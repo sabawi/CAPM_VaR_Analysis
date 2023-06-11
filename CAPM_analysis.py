@@ -118,6 +118,31 @@ def calculate_beta(stock_data, market="^GSPC", strPeriod="3y") -> float:
 
     return beta, market_data
 
+def calculate_sharpe_ratio(risk_free_rate, average_return, standard_deviation):
+    excess_return = average_return - risk_free_rate
+    sharpe_ratio = excess_return / standard_deviation
+    return sharpe_ratio
+
+def sharp_ratio(stock_data, risk_free_rate) -> float:
+
+    import math 
+    
+    # Calculate the stock's returns
+    stock_returns = stock_data['returns']
+    ave_returns_daily = np.mean(stock_returns)
+    print(f"\tAverage Return for the period = {round(ave_returns_daily*100,5)}%")
+    sigma = np.std(stock_returns)
+    print(f"\tStandard Deviation for the period = {round(sigma,5)}")
+    
+    # Convert risk-free rate to daily rate
+    daily_risk_free_rate = math.pow(1 + risk_free_rate, 1/252) - 1
+    print(f"\tDaily Risk Free Rate = {round(daily_risk_free_rate*100,5)}%")
+
+    # Calculate Sharpe ratio
+    sharpe_ratio = calculate_sharpe_ratio(daily_risk_free_rate, ave_returns_daily, sigma)
+
+    return sharpe_ratio
+
 print("************************************************************************************")
 print("********  Capital Asset Pricing Model (CAPM) & Value at Risk (VaR) Analysis ********")
 print("************************************************************************************\n")
@@ -134,7 +159,7 @@ stock_data_period = f"{beta_lookback_period}y"
 bond_maturity = f"{investment_period_years} Yr"
 
 # Download daily price data for the stock for the last n years
-stock_data = yf.download(stock_symbol, period=stock_data_period)
+stock_data = yf.download(stock_symbol, period=stock_data_period,progress=False)
 
 # Calculate daily returns
 stock_data['returns'] = stock_data['Close'].pct_change().dropna()
@@ -199,12 +224,23 @@ print("\tFuture Stock investment Value: ${:,.2f}***".format(stock_fv))
 
 print("\n**Bond future value assumes no re-investment of coupon payments\n***Stock investment assumes buy and hold for duration")
 
+# Calculate the Sharpe Ratio for the stock
+print("\n************************************************************************************")
+print(f"*******************  Sharpe Ratio Calculation for {stock_symbol} Stock **********************")
+print("************************************************************************************\n")
 
+print(f"\tUsing Risk Free Rate : {round(risk_free_rate*100,5)}%")
+print(f"\tUsing a lookback period of {stock_data_period}")
 
-# In[29]:
+# Calculate the Sharpe Ratio for the stock
+sharp_ratio = sharp_ratio(stock_data, risk_free_rate)
+print(f"\nSharpe Ratio for {stock_symbol} Stock: {round(sharp_ratio,5)*100}%")
 
 
 # VaR Analysis
+print("\n************************************************************************************")
+print(f"*******************  Value at Risk (VaR) Analysis for {stock_symbol} Stock *******************")
+print("************************************************************************************\n")
 
 print(f"\nDaily Value at Risk (VaR) Analysis for {stock_symbol} Stock:")
 # Set the confidence level for VaR calculation (e.g. 95% confidence level)
@@ -236,7 +272,8 @@ var_mc_pct, var_mc_dol = var_monte_carlo(stock_data.Close,
 
 var_cov_pct, var_cov_dol = var_covariance(stock_data.Close.iloc[-1], 1, std_dev_return, confidence_level)
 
-
+print("\n**************************************************************************************")
+print("**************************************************************************************\n")
 
 # In[ ]:
 
